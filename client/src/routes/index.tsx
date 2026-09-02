@@ -7,6 +7,7 @@ import Loading from '@/components/ui/LoadingComp';
 const ClienteNuevosPage = lazy(() => import('@/pages/ClientesNuevos'));
 const SeleccionReportes = lazy(() => import('@/pages/SeleccionReportes'));
 const ClienteTodosPage = lazy(() => import('@/pages/ClientesTodos'));
+const ClienteTodosPageActu = lazy(() => import('@/pages/ClientesTodosActualizacion'));
 const EditarClientePage = lazy(() => import('@/pages/EditarCliente'));
 const ReporteBaloto = lazy(() => import('@/pages/reports/baloto'));
 const ReportClienteGanadores = lazy(() => import('@/pages/reports/clientes-mas-ganadores'));
@@ -25,6 +26,10 @@ export const BrowserRouter = createBrowserRouter([
       {
         index: true,
         element: <Suspense fallback={<Loading />}><ClienteTodosPage /></Suspense>
+      },
+      {
+        path: 'actualizacion-masiva',
+        element: <Suspense fallback={<Loading />}><ClienteTodosPageActu /></Suspense>
       },
       {
         path: 'reportes',

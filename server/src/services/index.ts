@@ -1,13 +1,20 @@
 import { ConsultaResultAttrib } from '@type/interface';
 import { Premios } from '@models/premios.model';
+import { Parametros } from '@models/parametros.model';
 import { fn, literal } from 'sequelize';
 
 const cantMin = 15
 const cantMax = 48
-const UVT = 47065
 
-const menor15 = cantMin * UVT
-const mayor48 = cantMax * UVT
+export async function obtenerUVT(): Promise<number> {
+  const parametro = await Parametros.findOne({
+    where: { NOMBRE: 'VALUVT' },
+    attributes: ['VALOR']
+  });
+  const valorUVT = parametro ? parseInt(parametro.VALOR) : 47065;
+  console.log('UVT desde base de datos:', valorUVT);
+  return valorUVT;
+}
 
 /**
  * 
@@ -17,6 +24,12 @@ const mayor48 = cantMax * UVT
  */
 
 export const CantidadPremios = async (fecha: string | undefined, zone: 39627 | 39628) => {
+  const uvt = await obtenerUVT();
+  const menor15 = cantMin * uvt;
+  const mayor48 = cantMax * uvt;
+
+  console.log('first', uvt)
+
   const opc = fecha !== undefined && fecha !== 'undefined' ? fecha.slice(0, 10) : fn('CURDATE');
 
   const Data: ConsultaResultAttrib[] = await Premios.findAll({

@@ -40,6 +40,7 @@ interface DataResponse {
 
 const fetchData = async (sendInfo: PropsData) => {
   try {
+    //const response = await axios.post<DataResponse>(`${URL_API_DATA}/tus-datos/launch`, sendInfo)
     const response = await axios.post<DataResponse>(`${URL_API_DATA}/tus-datos/launch`, sendInfo)
     return response.data
   } catch (error) {

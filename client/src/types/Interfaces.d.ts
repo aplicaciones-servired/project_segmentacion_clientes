@@ -23,24 +23,24 @@ export interface DataResponse {
 
 export interface User {
   id: string;
-  names: string,
-  lastnames: string,
-  username: string,
-  email: string,
-  company: string,
-  process: string,
-  sub_process: string,
+  names: string;
+  lastnames: string;
+  username: string;
+  email: string;
+  company: string;
+  process: string;
+  sub_process: string;
 }
 
 export interface ReportDataBaloto {
-  CAJERO: string
-  FECHAPAGO: string
-  PREMIO: number
-  RETEFUENTE: number
-  SERIE_CONSECUTIVO: string
-  TERCERO: string
-  TIPOPREMIO: string
-  ZONA: string
+  CAJERO: string;
+  FECHAPAGO: string;
+  PREMIO: number;
+  RETEFUENTE: number;
+  SERIE_CONSECUTIVO: string;
+  TERCERO: string;
+  TIPOPREMIO: string;
+  ZONA: string;
 }
 
 export interface DataCliente {
@@ -55,7 +55,6 @@ export interface Client {
   DIRECCION: string;
   TELEFONO1: string;
 }
-
 
 export interface ReportPremios {
   TERCERO: string;
@@ -75,7 +74,6 @@ export interface ReportClient {
   DIRECCION: string;
   TELEFONO1: string;
 }
-
 
 export interface ReportMayores {
   FECHAPAGO: string;
@@ -97,13 +95,15 @@ export enum Tipodocumento {
   Cemp = "CEMP",
 }
 
-
 export interface ReportLaft {
   TERCERO: string;
   CANT_PREMIOS_CHANCE: number;
   CANT_PREMIOS_ASTRO: number;
   CANT_PREMIOS_LOTERIA: number;
   CANT_PREMIOS_RASPE: number;
+  CANT_PREMIOS_BALOTO: number;
+  CANT_PREMIOS_MILOTO: number;
+  CANT_PREMIOS_CLOTO: number;
   TOTAL_PREMIOS_COBRADOS: string;
   Client: Laft;
 }
@@ -130,8 +130,8 @@ export interface ReportOracleInterface {
 }
 
 export interface CompanyData {
-  empresa: string
-  data: ChartData[]
+  empresa: string;
+  data: ChartData[];
 }
 
 export interface ChartData {

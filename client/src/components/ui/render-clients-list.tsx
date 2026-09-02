@@ -15,14 +15,18 @@ import { Button } from './button';
 export const RenderClients = ({ clientes } : { clientes: Cliente[] }) => {
   const navigate = useNavigate();
 
-  if (clientes.length === 0) {
+    if (!clientes || clientes.length === 0) {
     return (
       <div className='flex flex-col items-center justify-center py-12 text-center'>
         <div className='w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4'>
           <User size={32} className='text-gray-400' />
         </div>
-        <h3 className='text-lg font-medium text-gray-900 mb-2'>No hay clientes disponibles</h3>
-        <p className='text-gray-500'>No se encontraron clientes que coincidan con los criterios de búsqueda.</p>
+        <h3 className='text-lg font-medium text-gray-900 mb-2'>
+          No hay clientes disponibles
+        </h3>
+        <p className='text-gray-500'>
+          No se encontraron clientes que coincidan con los criterios de búsqueda.
+        </p>
       </div>
     );
   }

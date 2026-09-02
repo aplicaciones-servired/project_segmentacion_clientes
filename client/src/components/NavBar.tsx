@@ -1,4 +1,4 @@
-import { BarChart3, Users, UserPlus, FileText, LogOut, Menu, DatabaseZapIcon } from 'lucide-react';
+import { BarChart3, Users, UserPlus, FileText, LogOut, Menu, DatabaseZapIcon, UserCog } from 'lucide-react';
 import { LogoutAndDeleteToken } from '@/services/LogOut';
 import { useAuth } from '@/auth/AuthContext';
 import { NavLink } from 'react-router';
@@ -28,6 +28,12 @@ export default function NavBar() {
       to: '/',
       icon: Users,
       description: 'Gestión de clientes'
+    },
+    {
+      title: 'Actualizacion Masiva',
+      to: 'actualizacion-masiva',
+      icon: UserCog,
+      description: 'Actualizacion de clientes Masiva'
     },
     {
       title: 'Clientes Nuevos',
@@ -91,8 +97,8 @@ export default function NavBar() {
                   title={item.title}
                   className={({ isActive }) => `
                     group flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200
-                    ${isActive 
-                      ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/25' 
+                    ${isActive
+                      ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/25'
                       : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                     }
                   `}
@@ -103,7 +109,7 @@ export default function NavBar() {
                   `}>
                     <IconComponent size={20} />
                   </div>
-                  
+
                   {!isCollapsed && (
                     <div className="flex-1 min-w-0">
                       <div className="text-sm font-medium truncate">
