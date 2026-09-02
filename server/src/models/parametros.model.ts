@@ -1,4 +1,4 @@
-import { Model, InferAttributes, InferCreationAttributes, DataTypes } from 'sequelize';
+import { Model, Optional, DataTypes } from 'sequelize';
 import PowerBi from '@connections/mysqldb'
 
 interface ParametrosAttributes {
@@ -15,9 +15,9 @@ interface ParametrosAttributes {
   USUARIO_MODIFICACION: string;
 }
 
-type ParametrosCreationAttributes = InferCreationAttributes<ParametrosAttributes>;
+type ParametrosCreationAttributes = Optional<ParametrosAttributes, 'ID' | 'FECHA_CREACION' | 'FECHA_MODIFICACION'>;
 
-class Parametros extends Model<InferAttributes<Parametros>, InferCreationAttributes<Parametros>> {
+class Parametros extends Model<ParametrosAttributes, ParametrosCreationAttributes> {
   declare ID: number;
   declare NOMBRE: string;
   declare VALOR: string;
@@ -41,7 +41,7 @@ Parametros.init({
   DESCRIPCION: { type: DataTypes.TEXT, allowNull: true, defaultValue: null },
   FECHA_CREACION: { type: DataTypes.DATE, allowNull: true, defaultValue: DataTypes.NOW },
   USUARIO_CREACION: { type: DataTypes.STRING(50), allowNull: true, defaultValue: null },
-  FECHA_MODIFICACION: { type: DataTypes.DATE, allowNull: true, defaultValue: DataTypes.NOW, onUpdate: DataTypes.NOW },
+  FECHA_MODIFICACION: { type: DataTypes.DATE, allowNull: true, defaultValue: DataTypes.NOW },
   USUARIO_MODIFICACION: { type: DataTypes.STRING(50), allowNull: true, defaultValue: null },
 }, {
   sequelize: PowerBi,
