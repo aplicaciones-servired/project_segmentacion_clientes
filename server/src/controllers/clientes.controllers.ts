@@ -164,62 +164,39 @@ export const updateCliente = async (req: Request, res: Response) => {
 };
 
 export const updateClienteMasivos = async (req: Request, res: Response) => {
-  const { categoria, tipozona, seleccionados } = req.body;
-
-  if (!categoria || !tipozona || !seleccionados) {
-    res.status(400).json({ message: "faltan Campos Requeridos" });
-    return;
-  }
-
-  try {
-    const [updated] = await Client.update(
-      {
-        CATEGORIA: categoria,
-        TIPOZONA: tipozona,
-      },
-      {
-        where: { DOCUMENTO: seleccionados },
-      }
-    );
-
-    if (!updated) {
-      res.status(404).json({ message: "Client not found" });
-      return;
-    }
-
-    res.status(200).json({ message: "Client Actualizado Correctamente" });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Internal server error" });
-  }
+  res.status(410).json({ message: "Endpoint deprecado. Use POST /updateClientes" });
 };
 
 export const updateClientes = async (req: Request, res: Response) => {
   const result = validateUpdate(req.body);
 
   if (!result.success) {
-    res.status(400).json({ message: "Invalid data" });
+    res.status(400).json({
+      message: "Datos inválidos",
+      errors: result.error.issues
+    });
     return;
   }
 
   const { documentos, categoria, tipozona } = result.data;
 
-  if (categoria === undefined && tipozona === undefined) {
-    res
-      .status(400)
-      .json({ message: "Se debe seleccionar mínimo un campo a actualizar" });
-    return;
-  }
-
   try {
-    await Client.update(
+    const [updatedCount] = await Client.update(
       { CATEGORIA: categoria, TIPOZONA: tipozona },
       {
         where: { DOCUMENTO: { [Op.in]: documentos } },
       }
     );
 
-    res.status(200).json({ message: "Clientes Actualizados Correctamente" });
+    if (updatedCount === 0) {
+      res.status(404).json({ message: "No se encontraron clientes para actualizar" });
+      return;
+    }
+
+    res.status(200).json({
+      message: "Clientes Actualizados Correctamente",
+      actualizados: updatedCount
+    });
     return;
   } catch (error) {
     console.log(error);

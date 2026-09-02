@@ -29,6 +29,8 @@ const chartConfig = {
   value: { label: 'Premios' },
 } satisfies ChartConfig
 
+
+
 export function ChartPieDonut({ empresa, data }: { empresa: string, data: ChartData[] }) {
   return (
     <Card className='flex flex-col w-full'>
@@ -49,7 +51,7 @@ export function ChartPieDonut({ empresa, data }: { empresa: string, data: ChartD
                   content={<ChartTooltipContent hideLabel />}
                 />
                 <Pie
-                  data={data}
+                  data={data as { label: string; value: number }[]}
                   dataKey='value'
                   nameKey='label'
                   innerRadius={60}

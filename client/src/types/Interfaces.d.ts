@@ -135,6 +135,7 @@ export interface CompanyData {
 }
 
 export interface ChartData {
+  [key: string]: string | number;
   id: number;
   label: string;
   value: number;

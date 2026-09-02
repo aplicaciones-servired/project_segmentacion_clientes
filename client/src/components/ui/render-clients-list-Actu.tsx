@@ -8,14 +8,14 @@ import {
 } from '@/components/ui/table';
 
 import { Cliente } from '@/types/Interfaces';
-import { Mail, Phone, User, FileText, MapPin, Check, ListChecks } from 'lucide-react';
+import { Mail, Phone, User, FileText, MapPin, Check, ListChecks, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import axios from 'axios';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './select';
-import { Categorizacion, TipoZona } from '@/utils/contanst'
+import { Categorizacion, TipoZona, URL_API_DATA } from '@/utils/contanst'
 
 interface Props {
   clientes: Cliente[];
@@ -30,6 +30,7 @@ export const RenderClientsActu = ({
 
   const [categoriaGlobal, setCategoriaGlobal] = useState('');
   const [zonaGlobal, setZonaGlobal] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const toggleSeleccion = (DOCUMENTO: string) => {
     setSeleccionados(prev => {
@@ -70,30 +71,59 @@ export const RenderClientsActu = ({
 
 
   const handleSubmit = () => {
-
-    if (!categoriaGlobal && !zonaGlobal && !seleccionados) {
-      toast.warning('Los Campos categoría y tipo de zona son obligatorios');
+    if (seleccionados.length === 0) {
+      toast.warning('Debe seleccionar al menos un cliente');
       return;
     }
 
-    //axios.post(`${URL_API_DATA}/updateClienteMasivos`, { categoria, tipozona, seleccionados })
-    axios.post(`http://10.98.98.104:4020/updateClienteMasivos`, {
-      seleccionados: seleccionados,      // 👈 todos los documentos seleccionados
-      categoria: categoriaGlobal,     // 👈 valor global seleccionado
-      tipozona: zonaGlobal            // 👈 valor global seleccionado
-    })
-      .then(res => {
-        console.log(res)
-        toast.success('Cliente actualizado correctamente', { description: 'Cambio de información del cliente' });
-        setTimeout(() => {
-          window.location.reload();
-        }, 1500);
-      })
-      .catch(error => {
-        console.error('Error updating client:', error)
-        toast.error('Error al actualizar cliente', { description: 'Cambio de información del cliente' });
-      });
-  }
+    if (!categoriaGlobal && !zonaGlobal) {
+      toast.warning('Seleccione al menos un campo a actualizar (categoría o zona)');
+      return;
+    }
+
+    toast(`Se actualizarán ${seleccionados.length} cliente(s). ¿Continuar?`, {
+      action: {
+        label: 'Confirmar',
+        onClick: () => ejecutarActualizacion()
+      },
+      cancel: {
+        label: 'Cancelar',
+        onClick: () => {}
+      },
+      duration: 10000,
+    });
+  };
+
+  const ejecutarActualizacion = async () => {
+    setIsLoading(true);
+    try {
+      const payload: Record<string, unknown> = {
+        documentos: seleccionados,
+      };
+      if (categoriaGlobal) payload.categoria = categoriaGlobal;
+      if (zonaGlobal) payload.tipozona = zonaGlobal;
+
+      const res = await axios.post(`${URL_API_DATA}/updateClientes`, payload);
+
+      const actualizados = res.data?.actualizados || seleccionados.length;
+      toast.success(`${actualizados} cliente(s) actualizado(s) correctamente`);
+      setSeleccionados([]);
+      setCategoriaGlobal('');
+      setZonaGlobal('');
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
+    } catch (error) {
+      console.error('Error updating clients:', error);
+      const msg = axios.isAxiosError(error)
+        ? error.response?.data?.message || 'Error del servidor'
+        : 'Error al actualizar clientes';
+      toast.error(msg);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   if (!clientes || clientes.length === 0) {
     return (
@@ -157,11 +187,18 @@ export const RenderClientsActu = ({
 
             <div className="md:col-span-2 flex justify-center">
               <Button
-                disabled={!seleccionados.length && !categoriaGlobal && !zonaGlobal}
+                disabled={isLoading || seleccionados.length === 0}
                 className="cursor-pointer bg-blue-600 text-white font-semibold px-6 py-2 rounded-lg transition-colors duration-200 w-4/12"
                 onClick={handleSubmit}
               >
-                Actualizar seleccionados
+                {isLoading ? (
+                  <>
+                    <Loader2 size={16} className="animate-spin mr-2" />
+                    Actualizando...
+                  </>
+                ) : (
+                  'Actualizar seleccionados'
+                )}
               </Button>
             </div>
           </>
