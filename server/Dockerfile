@@ -5,7 +5,7 @@ WORKDIR /app
 COPY . /app
 
 # Instalar dependencias necesarias
-RUN apt-get update && apt-get install -y libaio1
+RUN apt-get update && apt-get install -y libaio1t64
 
 # install bun library
 RUN npm install -g bun
